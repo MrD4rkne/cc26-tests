@@ -1,0 +1,34 @@
+[project]
+name = "cc26-tests"
+version = "0.1.0"
+description = "Shared end-to-end tests for cc26 compilers"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = ["pytest>=8"]
+
+[build-system]
+requires = ["uv_build>=0.8"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest-xdist>=3.8.0",
+    "ruff==0.16.10",  # pinned: everyone must format cases the same way
+]
+
+[tool.ruff]
+line-length = 88
+builtins = ["input_int"]  # cases call it without importing
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/cc26_tests"]
+addopts = "-n auto"  # pytest-xdist; -n 0 for a serial run
+
+[tool.ruff.lint.per-file-ignores]
+# Cases are test programs: style rewrites (e.g. `not (x == 2)` -> `x != 2`)
+# would delete the very construct a case exists to test. Pyflakes only.
+"src/cc26_tests/cases/**" = ["E", "I", "UP", "B", "SIM"]

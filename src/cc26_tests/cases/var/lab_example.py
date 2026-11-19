@@ -1,0 +1,15 @@
+# Copyright Daria
+c = 1
+b = 2
+c = c + b
+print(c)
+c = c + 10
+print(c)
+c = 10 + c
+print(c)
+c = b + c
+print(c)
+c = c + c
+print(c)
+c = -c
+print(c)

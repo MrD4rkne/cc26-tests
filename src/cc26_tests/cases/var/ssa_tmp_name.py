@@ -1,0 +1,6 @@
+tmp = input_int()
+tmp1 = -(tmp + 1)
+tmp = (tmp1 - tmp) * (tmp + 2)
+tmp1 = tmp1 - -(tmp * tmp1)
+print(tmp)
+print(tmp1)

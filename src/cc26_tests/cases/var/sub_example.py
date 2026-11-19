@@ -1,0 +1,4 @@
+a = input_int()
+mone = -1
+b = a - mone
+print(b)
