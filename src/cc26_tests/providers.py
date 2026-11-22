@@ -23,12 +23,26 @@ def read_case(path: Path, id: str) -> Case:
     )
 
 
-def corpus() -> Iterable[Case]:
-    """cases/<group>/NAME.py in this package."""
+# Groups for optional labs: in the package, but only run when asked for.
+OPT_IN_GROUPS = {"tuples"}
+
+
+def corpus_group(group: str) -> list[Case]:
     return [
-        read_case(p, f"corpus/{p.parent.name}/{p.stem}")
-        for p in sorted(CASES_DIR.glob("*/*.py"))
+        read_case(p, f"corpus/{group}/{p.stem}")
+        for p in sorted((CASES_DIR / group).glob("*.py"))
     ]
+
+
+def corpus() -> Iterable[Case]:
+    """cases/<group>/NAME.py in this package, opt-in groups excepted."""
+    groups = sorted(d.name for d in CASES_DIR.iterdir() if d.is_dir())
+    return [c for g in groups if g not in OPT_IN_GROUPS for c in corpus_group(g)]
+
+
+def tuples() -> Iterable[Case]:
+    """cases/tuples: the optional lab 7. Needs a runtime with a heap, see RUNTIME."""
+    return corpus_group("tuples")
 
 
 def cc26() -> Iterable[Case]:
@@ -40,5 +54,5 @@ def cc26() -> Iterable[Case]:
     ]
 
 
-PROVIDERS = {"corpus": corpus, "cc26": cc26}
-DEFAULT = ["corpus", "cc26"]  # fuzzers are opt-in
+PROVIDERS = {"corpus": corpus, "cc26": cc26, "tuples": tuples}
+DEFAULT = ["corpus", "cc26"]  # fuzzers and optional labs are opt-in
