@@ -20,6 +20,15 @@ in a fresh `tmp_path` per test (xdist-safe).
 - `RUNTIME` replaces `$CC26/support/runtime.c` in that line: files and flags, `shlex`-split,
   relative to pytest's working directory. Needed for `tuples`, whose programs call
   `initialize` and `collect`, e.g. `RUNTIME="build/runtime-full.o cc26/support/runtime.c"`.
+  `runtime-full.c` defines its own `print_int` and includes your `runtime.h`, so build
+  that `.o` first: `gcc -c -w -I<dir with runtime.h> -Dprint_int=rt_print_int
+  cc26/support/runtime-full.c -o build/runtime-full.o`.
+- The `tuples` GC cases allocate about 1.5 MB in total, so a broken collector only fails them
+  if your heap is smaller than that. Pass a small heap through `COMPILER`, e.g.
+  `COMPILER="uv run compiler.py --heap-size 64 {src} -o {out}"`.
+- `LINK` replaces that whole gcc line when one gcc call is not enough (e.g. the runtime
+  must be compiled with its own flags first): a command with `{asm}` and `{exe}`,
+  `shlex`-split like `COMPILER`, e.g. `LINK="./build.sh {asm} {exe}"`. Wins over `RUNTIME`.
 - `CC26` (default `./cc26`) points at the course repo; it gives `runtime.c` and
   the cc26 cases. Missing → e2e tests skip with a reason, the cc26 provider yields nothing.
 - Pass = the binary's stdout, split on whitespace, equals the expected output split
@@ -34,6 +43,7 @@ uv run pytest --pyargs cc26_tests                 # run the shipped suite, zero 
 uv run pytest --pyargs cc26_tests -k "if/ and not fun/"   # subset by id
 CT_PROVIDERS=corpus,fuzz_arith uv run pytest --pyargs cc26_tests
 CT_PROVIDERS=corpus,cc26,tuples RUNTIME="..." uv run pytest --pyargs cc26_tests   # + optional lab 7
+CT_PROVIDERS=corpus,tuples LINK="./build.sh {asm} {exe}" uv run pytest --pyargs cc26_tests
 ```
 
 or pull the cases into your own tests (e.g. per-pass interpreter checks):

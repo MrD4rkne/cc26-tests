@@ -1,4 +1,4 @@
-# Far more garbage than a heap holds, so the collector runs many times: the
+# ~1.4 MB of garbage: with a small heap the collector runs many times, and the
 # live tuple and the one inside it must survive every copy intact.
 x = input_int()
 keep = (x, (x + 1, True))
