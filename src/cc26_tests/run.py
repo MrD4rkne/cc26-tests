@@ -1,4 +1,4 @@
-"""Subprocess helpers: the CPython oracle and compile -> gcc -> run."""
+"""Subprocess helpers: the CPython oracle and compile -> link -> run."""
 
 import os
 import shlex
@@ -14,7 +14,7 @@ RUNTIME_C = CC26 / "support" / "runtime.c"
 RUNTIME = shlex.split(os.environ["RUNTIME"]) if "RUNTIME" in os.environ else None
 # Or the whole link step: $LINK with {asm}/{exe} filled in, for a runtime that
 # needs more than one gcc call, e.g. "./build.sh {asm} {exe}". Wins over RUNTIME.
-LINK = os.environ.get("LINK")
+LINK = os.environ.get("LINK") or None  # LINK= (empty) means unset
 DEFAULT_COMPILER = "uv run compiler.py {src} -o {out}"
 
 # input_int both bare (corpus) and via `from runtime import input_int` (cc26);

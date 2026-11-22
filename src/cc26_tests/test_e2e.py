@@ -1,4 +1,4 @@
-"""Every selected case through $COMPILER, gcc and the binary."""
+"""Every selected case through $COMPILER, the link step and the binary."""
 
 import shutil
 from pathlib import Path
