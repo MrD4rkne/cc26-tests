@@ -1,6 +1,6 @@
 # 06fun1: a call in a loop test. n and i are live across the call in the
 # loop header, so they must survive the caller-saved registers it clobbers.
-def square(x):
+def square(x: int) -> int:
     return x * x
 
 

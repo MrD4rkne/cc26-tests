@@ -1,7 +1,7 @@
 # - a function whose parameter is still needed after a call inside its body
 
 
-def f(a, b, c):
+def f(a: int, b: int, c: int) -> int:
     print(a)
     print(b)
     print(c)

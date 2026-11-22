@@ -1,6 +1,6 @@
 # 06fun1: deep, non-tail recursion with two parameters, one nested
 # recursive call as an argument: stresses the stack and its alignment.
-def ack(m, n):
+def ack(m: int, n: int) -> int:
     if m == 0:
         return n + 1
     if n == 0:
