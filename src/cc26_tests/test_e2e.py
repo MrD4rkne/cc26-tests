@@ -6,11 +6,14 @@ from pathlib import Path
 import pytest
 
 from cc26_tests import Case, cases
-from cc26_tests.run import RUNTIME_C, compile_and_run, oracle
+from cc26_tests.run import RUNTIME, RUNTIME_C, compile_and_run, oracle
 
 
 @pytest.mark.skipif(shutil.which("gcc") is None, reason="gcc not installed")
-@pytest.mark.skipif(not RUNTIME_C.exists(), reason=f"{RUNTIME_C} missing, set CC26")
+@pytest.mark.skipif(
+    RUNTIME is None and not RUNTIME_C.exists(),
+    reason=f"{RUNTIME_C} missing, set CC26 or RUNTIME",
+)
 @pytest.mark.parametrize("case", cases())
 def test_compiled_program_prints_expected_output(case: Case, tmp_path: Path) -> None:
     expected = case.expected

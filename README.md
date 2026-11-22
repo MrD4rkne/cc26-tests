@@ -17,6 +17,9 @@ Split with `shlex.split`, run from pytest's working directory (your compiler rep
 in a fresh `tmp_path` per test (xdist-safe).
 
 - Compiler, gcc and binary must each exit 0, else the test fails with the stderr tail. Timeouts: 30 s compile, 10 s run. The assembly is linked with `gcc ... $CC26/support/runtime.c -Wl,-z,noexecstack`.
+- `RUNTIME` replaces `$CC26/support/runtime.c` in that line: files and flags, `shlex`-split,
+  relative to pytest's working directory. Needed for `tuples`, whose programs call
+  `initialize` and `collect`, e.g. `RUNTIME="build/runtime-full.o cc26/support/runtime.c"`.
 - `CC26` (default `./cc26`) points at the course repo; it gives `runtime.c` and
   the cc26 cases. Missing → e2e tests skip with a reason, the cc26 provider yields nothing.
 - Pass = the binary's stdout, split on whitespace, equals the expected output split
@@ -30,6 +33,7 @@ Install as a dev dependency (git or path source in `[tool.uv.sources]`), then ei
 uv run pytest --pyargs cc26_tests                 # run the shipped suite, zero files in your repo
 uv run pytest --pyargs cc26_tests -k "if/ and not fun/"   # subset by id
 CT_PROVIDERS=corpus,fuzz_arith uv run pytest --pyargs cc26_tests
+CT_PROVIDERS=corpus,cc26,tuples RUNTIME="..." uv run pytest --pyargs cc26_tests   # + optional lab 7
 ```
 
 or pull the cases into your own tests (e.g. per-pass interpreter checks):
@@ -58,7 +62,7 @@ src/cc26_tests/
   conftest.py             collect_ignore_glob = ["cases/*"]
   test_e2e.py             compile + gcc + run every selected case
   test_corpus.py          no compiler needed: oracle runs; agrees with .out where one exists
-  cases/<group>/NAME.py [.in] [.out]   groups: var, if, loops, fun (cc26 chapters)
+  cases/<group>/NAME.py [.in] [.out]   groups: var, if, loops, fun (cc26 chapters); tuples (opt-in)
 ```
 
 ## Case and providers
@@ -78,14 +82,17 @@ A provider is any `() -> Iterable[Case]`. No base class.
 PROVIDERS = {
     "corpus": corpus,
     "cc26": cc26,
+    "tuples": tuples,
 }  # + "fuzz_arith": fuzz_arith.cases when one exists
-DEFAULT = ["corpus", "cc26"]  # fuzzers opt-in
+DEFAULT = ["corpus", "cc26"]  # fuzzers and optional labs opt-in
 ```
 
 `CT_PROVIDERS` is a comma list of names. A generator living elsewhere can skip the
 registry: `cases()` is just data, parametrize over your own list in your own test.
 
-- `corpus`: `cases/` in this package.
+- `corpus`: `cases/` in this package, minus the opt-in groups.
+- `tuples`: `cases/tuples/`, the optional lab 7 (ids `corpus/tuples/name`). Opt-in, so a
+  compiler without tuples sees no new failures; `test_corpus.py` still checks these cases.
 - `cc26`: `$CC26/tests/<chapter>_tests/*.py` minus `runtime.py`, `run_tests.py`; id
   `cc26/<group>/name`, group = folder minus `_tests`, same names as the corpus so `-k` spans both. Referenced
   by path, never copied (EOC licence).

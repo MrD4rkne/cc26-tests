@@ -9,6 +9,9 @@ from pathlib import Path
 from cc26_tests.providers import CC26
 
 RUNTIME_C = CC26 / "support" / "runtime.c"
+# What gcc links the assembly with: $RUNTIME (shlex-split files and flags),
+# default cc26's runtime.c. Tuples need one with initialize and collect.
+RUNTIME = shlex.split(os.environ["RUNTIME"]) if "RUNTIME" in os.environ else None
 DEFAULT_COMPILER = "uv run compiler.py {src} -o {out}"
 
 # input_int both bare (corpus) and via `from runtime import input_int` (cc26);
@@ -57,5 +60,6 @@ def compile_and_run(source: str, stdin: str, tmp: Path) -> str:
         for a in shlex.split(template)
     ]
     run(cmd, "compiler", 30)
-    run(["gcc", "-o", exe, asm, RUNTIME_C, "-Wl,-z,noexecstack"], "gcc", 30)
+    runtime = RUNTIME if RUNTIME is not None else [RUNTIME_C]
+    run(["gcc", "-o", exe, asm, *runtime, "-Wl,-z,noexecstack"], "gcc", 30)
     return run([exe], "program", 10, stdin)
