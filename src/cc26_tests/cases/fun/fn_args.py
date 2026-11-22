@@ -1,28 +1,28 @@
-def add0():
+def add0() -> int:
     return 7
 
 
-def add1(a):
+def add1(a: int) -> int:
     return a + 7
 
 
-def add2(a, b):
+def add2(a: int, b: int) -> int:
     return a + b + 7
 
 
-def add3(a, b, c):
+def add3(a: int, b: int, c: int) -> int:
     return a + b + c + 7
 
 
-def add4(a, b, c, d):
+def add4(a: int, b: int, c: int, d: int) -> int:
     return a + b + c + d + 7
 
 
-def add5(a, b, c, d, e):
+def add5(a: int, b: int, c: int, d: int, e: int) -> int:
     return a + b + c + d + e + 7
 
 
-def add6(a, b, c, d, e, f):
+def add6(a: int, b: int, c: int, d: int, e: int, f: int) -> int:
     return a + b + c + d + e + f + 7
 
 

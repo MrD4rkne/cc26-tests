@@ -1,6 +1,6 @@
 # 06fun1: a return inside an if inside a loop. Nothing runs after it, and
 # the loop's variables must not be live at the jump to the conclusion.
-def find(target):
+def find(target: int) -> int:
     i = 0
     while i < 100:
         if i * i == target:

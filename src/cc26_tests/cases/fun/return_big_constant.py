@@ -1,16 +1,16 @@
-def add(x):
+def add(x: int) -> int:
     return x + 5000000000
 
 
-def sub(x):
+def sub(x: int) -> int:
     return x - 5000000000
 
 
-def mul(x):
+def mul(x: int) -> int:
     return x * 4294967296
 
 
-def left(x):
+def left(x: int) -> int:
     return 5000000000 - x
 
 

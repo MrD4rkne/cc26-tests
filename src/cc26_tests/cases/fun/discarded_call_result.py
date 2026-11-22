@@ -1,6 +1,6 @@
 # 06fun1: a call as a statement whose result is thrown away. Its side
 # effects (print, input) still happen, and a stays live across it.
-def noisy(x):
+def noisy(x: int) -> int:
     print(x)
     return input_int()
 
