@@ -5,5 +5,5 @@ if x > 0 or input_int() > 0:
 else:
     print(0)
 y = x < 0 and input_int() > 0
-print(y)
+print(1 if y else 0)
 print(input_int())
