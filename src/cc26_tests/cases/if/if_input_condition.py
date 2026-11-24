@@ -1,4 +1,4 @@
-if input_int():
+if input_int() != 0:
     print(10)
 else:
     print(20)

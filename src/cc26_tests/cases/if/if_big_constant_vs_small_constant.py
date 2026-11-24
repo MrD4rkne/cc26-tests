@@ -8,6 +8,6 @@ if 5000000000 < 5:
 else:
     print(0)
 a = 5 >= 5000000000
-print(a)
+print(1 if a else 0)
 b = 5000000000 == 5000000000
-print(b)
+print(1 if b else 0)

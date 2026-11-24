@@ -6,6 +6,6 @@ else:
     print(y)
 b = x < y
 c = not b
-print(b)
-print(c)
+print(1 if b else 0)
+print(1 if c else 0)
 print(1 if c else 2)
